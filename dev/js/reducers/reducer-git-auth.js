@@ -3,7 +3,8 @@ import * as types from './../constants/actionTypes';
 // default state
 const initialState = {
     code: null,
-    token:null
+    token:null,
+    user:null
 }
 
 export default (state = initialState, action) => {
@@ -17,6 +18,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         token: action.payload.token
+      };
+    case types.SET_AUTH_USER:
+      return {
+        ...state,
+        user: action.payload.user
       };  
     default:
       return state;  

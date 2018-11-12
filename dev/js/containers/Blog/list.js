@@ -6,10 +6,24 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 class List extends Component {
   render() {
+    const list = this.props.list;
+    console.log('list====',list)
+    const listRender = list.map((item)=>{
+      return <li key={item.id} >{item.description} | {item.url} </li>
+    })
     return (
-      <ul>
-      <li>Listing</li>
-      </ul>  
+      <div>
+      {
+        list.length==0 ? 
+        <p>There are no blogs for current user</p>
+        :
+        <ul>
+          {listRender}
+        </ul>
+      }
+      </div>
+      
+
     )
   }
 }
