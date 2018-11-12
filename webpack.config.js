@@ -5,7 +5,8 @@ module.exports = {
     devServer: {
         inline: true,
         contentBase: './src',
-        port: 3000
+        port: 8001,
+        disableHostCheck:true
     },
     devtool: 'cheap-module-eval-source-map',
     entry: './dev/js/index.js',
@@ -18,7 +19,14 @@ module.exports = {
             },
             {
                 test: /\.scss/,
-                loader: 'style-loader!css-loader!sass-loader'
+                loader: 'style-loader!css-loader!sass-loader',
+            },
+            {
+                test: /\.css/,
+                loader: "style-loader!css-loader" ,
+                //loader: "",
+                //loader: 'style-loader!css-loader!sass-loader',
+                //use: ['style-loader', 'css-loader']
             }
         ]
     },

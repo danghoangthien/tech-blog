@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import UserReducer from './reducer-users';
+import GitAuthReducer from './reducer-git-auth';
 import ActiveUserReducer from './reducer-active-user';
 
 /*
@@ -9,7 +10,8 @@ import ActiveUserReducer from './reducer-active-user';
 
 const allReducers = combineReducers({
     users: UserReducer,
-    activeUser: ActiveUserReducer
+    activeUser: ActiveUserReducer,
+    git_auth: GitAuthReducer,
 });
 
 export default allReducers
