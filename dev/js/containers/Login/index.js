@@ -6,8 +6,9 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 // 3rd parties
 import GitHubLogin from 'react-github-login';
+import qs from 'query-string';
 
-// bussiness components :
+// core components :
 import {setAuthCode} from '../../actions/git-auth-action';
 
 
@@ -28,7 +29,10 @@ class Login extends Component {
   };
   
   componentDidMount() {
-    
+    const params = qs.parse(this.props.location.search, { ignoreQueryPrefix: true });
+    if (params['type'] && params['type'] == 'logout') {
+      localStorage.setItem('token', null);
+    }
   };
   
   componentDidUpdate() {

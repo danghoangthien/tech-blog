@@ -4,12 +4,26 @@ import {connect} from 'react-redux';
 import GitHubLogin from 'react-github-login';
 import 'bootstrap/dist/css/bootstrap.css';
 
+// import actions :
+import {getBlog} from '../../actions/blog-action';
+import {getAuthUser} from '../../actions/git-auth-action';
+
 class List extends Component {
+  
   render() {
     const list = this.props.list;
     console.log('list====',list)
-    const listRender = list.map((item)=>{
-      return <li key={item.id} >{item.description} | {item.url} </li>
+    const listRender = list.map((item,index)=>{
+      const id = item.id
+      const {token} = this.props.git_auth;
+      return (
+        <div className="row">
+          <div className="col-md-8" key={id} >{index+1}- {item.description} </div>
+          <div className="col-md-4"> 
+            <a type="button" onClick={()=>{this.props.doGetBlog(token,id)}} className="badge badge-light">Detail</a> 
+          </div>
+        </div>
+        )
     })
     return (
       <div>
@@ -17,9 +31,9 @@ class List extends Component {
         list.length==0 ? 
         <p>There are no blogs for current user</p>
         :
-        <ul>
+        <div >
           {listRender}
-        </ul>
+        </div>
       }
       </div>
       
@@ -39,7 +53,10 @@ function mapStateToProps(state) {
 // Get actions and pass them as props to to UserList
 //      > now UserList has this.props.selectUser
 function matchDispatchToProps(dispatch){
-    return bindActionCreators({}, dispatch);
+    return bindActionCreators({
+      doGetBlog: getBlog,
+      doGetAuthUser: getAuthUser
+    }, dispatch);
 }
 
 export default connect(mapStateToProps, matchDispatchToProps)(List);

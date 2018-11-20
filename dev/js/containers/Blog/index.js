@@ -6,15 +6,19 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 // import actions :
 import {getAuthToken,setAuthToken,getAuthUser} from '../../actions/git-auth-action';
-import {getBlogList} from '../../actions/blog-action';
+import {getBlogList,setView} from '../../actions/blog-action';
 // import containers
 import List from '../../containers/Blog/list';
 import Detail from '../../containers/Blog/detail';
+import New from '../../containers/Blog/new';
+
+const VIEW_BLOG_DETAIL = 1
+const VIEW_BLOG_NEW = 2
 
 class Blog extends Component {
   
   constructor(props) {
-    super(props)
+    super(props);
   }
   
   componentDidMount() {
@@ -31,6 +35,7 @@ class Blog extends Component {
     } else {
       this.props.doSetAuthToken({access_token:token});
     }
+    
   };
   
   componentDidUpdate() {
@@ -46,37 +51,42 @@ class Blog extends Component {
       }
     }
   };
-  
+
   render() {
     const {token,user} = this.props.git_auth;
+    console.log("user ",user)
     const list = this.props.blogs.list;
     console.log("blog ",this.props.blogs)
     console.log("blog index list",list)
     return (
-      <div className="mt-3 ml-5" >
+      <div className="container-fluid mt-3" >
       {token ?
         <div>
           <div className="row">
-            <div className="col-md-4">
-              <button type="button" className="btn btn-primary">New</button>&nbsp;
+            <div className="col-md-3">
+              <button type="button" className="btn btn-primary" onClick={()=>{this.props.doSetView(VIEW_BLOG_NEW)}}>New</button>&nbsp;
             </div>
-            { (user && user.name) &&
-            <div className="col-md-8">
-              <span className="badge badge-primary float-right mr-3">Welcome back, {user.name} (<a>Logout</a>)</span>
+            { (user && user.login) &&
+            <div className="col-md-9">
+              <span className="badge badge-primary float-right mr-3">Welcome back, {user.login}! (<a style={{color:"#ffffff"}} href="#/login?type=logout" >Logout</a>)</span>
             </div>
             }
           </div>
           <div className="row mt-4">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <List list={list}/>
             </div>
             <div className="col-md-8">
-              <Detail/>
+              { this.props.blog.view == VIEW_BLOG_DETAIL && <Detail /> }
+              { this.props.blog.view == VIEW_BLOG_NEW && <New /> }
             </div>
           </div>
         </div>
         : 
-        <div className="col-md-12">hello blog hub user, we could not get token yet!</div>
+        <div className="col-md-12">
+          {"hello blog hub user, we could not get token yet! please click here  to retry "}
+          <a href="#/login" >Login with github</a>
+        </div>
         
       }
       
@@ -91,7 +101,8 @@ class Blog extends Component {
 function mapStateToProps(state) {
     return {
         git_auth: state.git_auth,
-        blogs:state.blogs
+        blogs:state.blogs,
+        blog:state.blog
     };
 }
 
@@ -101,7 +112,8 @@ function matchDispatchToProps(dispatch){
       doGetAuthToken: getAuthToken,
       doSetAuthToken: setAuthToken,
       doGetAuthUser: getAuthUser,
-      doGetBlogList: getBlogList
+      doGetBlogList: getBlogList,
+      doSetView: setView
     }, dispatch);
 }
 
